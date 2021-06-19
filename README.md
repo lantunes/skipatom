@@ -13,7 +13,7 @@ of 126,335 structures obtained from the [Materials Project](https://materialspro
 `data/matproj_2020_10_09.pkl.gz`.  From this dataset, pairs of co-occurring atoms will be derived, as depicted in the 
 schematic below:
 
-<img src="resources/schematic.png" width="50%"/>
+<img src="resources/schematic.png" width="85%"/>
 
 These pairs will be used in the training of the SkipAtom vectors.
 
