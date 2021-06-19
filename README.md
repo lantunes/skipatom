@@ -35,3 +35,7 @@ model = SkipAtomInducedModel.load(pairs, td, min_count=20000000, top_n=5)
 # atom vector for Si
 print(model.vectors[model.dictionary["Si"]])
 ```
+
+Pre-trained 200-dimensional SkipAtom vectors for 86 atom types are available in the `data` directory, in the
+`matproj_2020_10_09.pairs.dim200.model` and `matproj_2020_10_09.pairs.training.data` files. The vectors can be 
+loaded and used as in step 4 in the instructions above.
