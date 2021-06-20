@@ -15,7 +15,8 @@ schematic below:
 
 <img src="resources/schematic.png" width="85%"/>
 
-These pairs will be used in the training of the SkipAtom vectors.
+These pairs will be used in the training of the SkipAtom vectors. Pairs that were previously derived from the 
+Materials Project dataset are available in the file `data/matproj_2020_10_09.pairs.csv.gz`.
 
 1. Create the co-occurrence pairs:
 ```
