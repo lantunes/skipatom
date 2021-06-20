@@ -46,7 +46,7 @@ from skipatom import SkipAtomInducedModel
 
 pairs = "data/matproj_2020_10_09.pairs.dim200.model"
 td = "data/matproj_2020_10_09.pairs.training.data"
-model = SkipAtomInducedModel.load(pairs, td, min_count=20000000, top_n=5)
+model = SkipAtomInducedModel.load(pairs, td, min_count=2e7, top_n=5)
 
 # atom vector for Si
 print(model.vectors[model.dictionary["Si"]])
