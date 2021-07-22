@@ -103,8 +103,7 @@ demonstrates how to use the class:
 ```python
 from skipatom import OneHotVectors
 
-atoms = ["Te", "Bi", "Se"]
-model = OneHotVectors(elems=atoms)
+model = OneHotVectors(["Te", "Bi", "Se"])
 
 # one-hot atom vector for Se
 print(model.vectors[model.dictionary["Se"]])
