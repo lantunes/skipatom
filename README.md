@@ -9,43 +9,43 @@ SkipAtom can be installed with:
 pip install skipatom
 ```
 
-Pre-trained 200-dimensional SkipAtom vectors for 86 atom types are available in the `data` directory, in the
-`matproj_2020_10_09.pairs.dim200.model` and `matproj_2020_10_09.pairs.training.data` files. To use the pre-trained 
-vectors, follow the example in step 4, below.
+Pre-trained 30- and 200-dimensional SkipAtom vectors for 86 atom types are available in the `data` directory, 
+in the `mp_2020_10_09.dim30.model` and `mp_2020_10_09.dim200.model` files. To use the pre-trained vectors, follow the 
+example in step 4, below.
 
 To create SkipAtom vectors, follow steps 1 to 3 below. A dataset of inorganic crystal structures is required. A dataset 
 of 126,335 structures obtained from the [Materials Project](https://materialsproject.org/) is available in 
-`data/matproj_2020_10_09.pkl.gz`.  From this dataset, pairs of co-occurring atoms will be derived, as depicted in the 
+`data/mp_2020_10_09.pkl.gz`.  From this dataset, pairs of co-occurring atoms will be derived, as depicted in the 
 schematic below:
 
 <img src="resources/schematic.png" width="85%"/>
 
 These pairs will be used in the training of the SkipAtom vectors. Pairs that were previously derived from the 
-Materials Project dataset are available in the file `data/matproj_2020_10_09.pairs.csv.gz`.
+Materials Project dataset are available in the file `data/mp_2020_10_09.pairs.csv.gz`.
 
-(NOTE: For the following steps, it is insufficient to install SkipAtom with pip. You must clone this repository 
-locally, and set up your environment using either the `requirements.txt` or `environment.yml` file.)
+_(NOTE: For the following steps 1 to 3, it is insufficient to install SkipAtom with pip. You must clone this repository 
+locally, and set up your environment using either the `requirements.txt` or `environment.yml` file.)_
 
 1. Create the co-occurrence pairs:
 ```
 python bin/create_cooccurrence_pairs.py \
---data data/matproj_2020_10_09.pkl.gz \
---out data/matproj_2020_10_09.pairs.csv.gz.2 \
+--data data/mp_2020_10_09.pkl.gz \
+--out data/mp_2020_10_09.pairs.csv.gz.2 \
 --processes 70 --workers 200 -z
 ```
 
 2. Prepare the data for training:
 ```
 python bin/create_skipatom_training_data.py \
---data data/matproj_2020_10_09.pairs.csv.gz \
---out data/matproj_2020_10_09.pairs.training.data
+--data data/mp_2020_10_09.pairs.csv.gz \
+--out data/mp_2020_10_09.training.data
 ```
 
 3. Create the SkipAtom embeddings:
 ```
 python bin/create_skipatom_embeddings.py \
---data data/matproj_2020_10_09.pairs.training.data \
---out data/matproj_2020_10_09.pairs.dim200.model \
+--data data/mp_2020_10_09.training.data \
+--out data/mp_2020_10_09.dim200.model \
 --dim 200 --step 0.01 --epochs 10 --batch 1024
 ```
 
@@ -53,9 +53,10 @@ python bin/create_skipatom_embeddings.py \
 ```python
 from skipatom import SkipAtomInducedModel
 
-pairs = "data/matproj_2020_10_09.pairs.dim200.model"
-td = "data/matproj_2020_10_09.pairs.training.data"
-model = SkipAtomInducedModel.load(pairs, td, min_count=2e7, top_n=5)
+model = SkipAtomInducedModel.load(
+    "data/mp_2020_10_09.dim200.model", 
+    "data/mp_2020_10_09.training.data", 
+    min_count=2e7, top_n=5)
 
 # atom vector for Si
 print(model.vectors[model.dictionary["Si"]])
@@ -64,17 +65,18 @@ print(model.vectors[model.dictionary["Si"]])
 ### Pooling Operations
 
 The `skipatom` module also contains several utility functions for pooling atom vectors into distributed representations 
-of compounds. For example, to create a sum-pooled representation for `Bi2Te3`:
+of compounds. For example, to create a sum-pooled representation for `Bi2Te3`, use the `sum_pool` function:
 ```python
-from skipatom import SkipAtomInducedModel, get_sum_pooled
+from skipatom import SkipAtomInducedModel, sum_pool
 from pymatgen import Composition
 
-pairs = "data/matproj_2020_10_09.pairs.dim200.model"
-td = "data/matproj_2020_10_09.pairs.training.data"
-model = SkipAtomInducedModel.load(pairs, td, min_count=2e7, top_n=5)
+model = SkipAtomInducedModel.load(
+    "data/mp_2020_10_09.dim200.model", 
+    "data/mp_2020_10_09.training.data", 
+    min_count=2e7, top_n=5)
 
 comp = Composition("Bi2Te3")
-pooled = get_sum_pooled(comp, model.dictionary, model.vectors)
+pooled = sum_pool(comp, model.dictionary, model.vectors)
 # sum-pooled atom vectors representing Bi2Te3 
 print(pooled)
 ``` 

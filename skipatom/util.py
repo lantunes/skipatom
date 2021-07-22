@@ -24,7 +24,7 @@ def get_cooccurrence_pairs(struct):
     return pairs
 
 
-def get_sum_pooled(comp, dictionary, embeddings):
+def sum_pool(comp, dictionary, embeddings):
     """
     Returns a sum-pooled distributed representation of the given composition using the given embeddings.
 
@@ -43,7 +43,7 @@ def get_sum_pooled(comp, dictionary, embeddings):
     return np.sum(vectors, axis=0).tolist()
 
 
-def get_mean_pooled(comp, dictionary, embeddings):
+def mean_pool(comp, dictionary, embeddings):
     """
     Returns a mean-pooled distributed representation of the given composition using the given embeddings.
 
@@ -64,7 +64,7 @@ def get_mean_pooled(comp, dictionary, embeddings):
     return (np.sum(vectors, axis=0) / tot_amount).tolist()
 
 
-def get_max_pooled(comp, dictionary, embeddings):
+def max_pool(comp, dictionary, embeddings):
     """
     Returns a max-pooled distributed representation of the given composition using the given embeddings.
 
