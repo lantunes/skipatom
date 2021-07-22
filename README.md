@@ -23,26 +23,29 @@ schematic below:
 These pairs will be used in the training of the SkipAtom vectors. Pairs that were previously derived from the 
 Materials Project dataset are available in the file `data/matproj_2020_10_09.pairs.csv.gz`.
 
+(NOTE: For the following steps, it is insufficient to install SkipAtom with pip. You must clone this repository 
+locally, and set up your environment using either the `requirements.txt` or `environment.yml` file.)
+
 1. Create the co-occurrence pairs:
 ```
 python bin/create_cooccurrence_pairs.py \
---data out/matproj_2020_10_09.pkl.gz \
---out out/matproj_2020_10_09.pairs.csv.gz.2 \
+--data data/matproj_2020_10_09.pkl.gz \
+--out data/matproj_2020_10_09.pairs.csv.gz.2 \
 --processes 70 --workers 200 -z
 ```
 
 2. Prepare the data for training:
 ```
 python bin/create_skipatom_training_data.py \
---data out/matproj_2020_10_09.pairs.csv.gz \
---out out/matproj_2020_10_09.pairs.training.data
+--data data/matproj_2020_10_09.pairs.csv.gz \
+--out data/matproj_2020_10_09.pairs.training.data
 ```
 
 3. Create the SkipAtom embeddings:
 ```
 python bin/create_skipatom_embeddings.py \
---data out/matproj_2020_10_09.pairs.training.data \
---out out/matproj_2020_10_09.pairs.dim200.model \
+--data data/matproj_2020_10_09.pairs.training.data \
+--out data/matproj_2020_10_09.pairs.dim200.model \
 --dim 200 --step 0.01 --epochs 10 --batch 1024
 ```
 
@@ -90,3 +93,18 @@ the Chemistry of Materials From only Elemental Composition." Scientific reports,
 
 > Zhou, Quan, et al. "Learning atoms for materials discovery."
 Proceedings of the National Academy of Sciences 115.28 (2018): E6411-E6417. 
+
+### One-hot Vectors
+
+For convenience, a class for assigning one-hot vectors to atoms is included in the library. The following example 
+demonstrates how to use the class:
+```python
+from skipatom import OneHotVectors
+
+atoms = ["Te", "Bi", "Se"]
+model = OneHotVectors(elems=atoms)
+
+# one-hot atom vector for Se
+print(model.vectors[model.dictionary["Se"]])
+# [0. 0. 1.]
+```

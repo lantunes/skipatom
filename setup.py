@@ -1,9 +1,9 @@
 from setuptools import setup, find_packages
 
-packages = find_packages(exclude=("tests", "demos",))
+packages = find_packages(exclude=("tests", "demos", "lib", "bin", "data", "resources",))
 
 setup(name="skipatom",
-      version="1.0.1",
+      version="1.0.2",
       description="SkipAtom, Distributed representations of atoms, inspired by the Skip-gram model.",
       long_description="SkipAtom is an approach for creating distributed representations of atoms, for use in Machine "
                        "Learning contexts. It is based on the Skip-gram model used widely in "
