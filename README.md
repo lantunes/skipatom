@@ -109,3 +109,10 @@ model = OneHotVectors(["Te", "Bi", "Se"])
 print(model.vectors[model.dictionary["Se"]])
 # [0. 0. 1.]
 ```
+
+- - - - - - - - -
+
+This research makes use of data from the [Materials Project](https://materialsproject.org/). 
+> A. Jain*, S.P. Ong*, G. Hautier, W. Chen, W.D. Richards, S. Dacek, S. Cholia, D. Gunter, D. Skinner, G. Ceder, K.A. 
+Persson (*=equal contributions). The Materials Project: A materials genome approach to accelerating materials innovation.
+APL Materials, 2013, 1(1), 011002. 
