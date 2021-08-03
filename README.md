@@ -2,7 +2,9 @@ SkipAtom
 ========
 
 SkipAtom is an approach for creating distributed representations of atoms, for use in Machine Learning contexts. It is
-based on the Skip-gram model used widely in Natural Language Processing.
+based on the Skip-gram model used widely in Natural Language Processing. The SkipAtom approach is described in the 
+paper _"Distributed Representations of Atoms and Materials for Machine Learning"_,
+[https://arxiv.org/abs/2107.14664](https://arxiv.org/abs/2107.14664).
 
 SkipAtom can be installed with:
 ```
