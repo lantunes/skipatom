@@ -3,6 +3,7 @@ from .trainer import Trainer
 from .model import SkipAtomModel
 import numpy as np
 from pymatgen import Element
+import re
 
 
 class SkipAtomInducedModel:
@@ -28,14 +29,20 @@ class SkipAtomInducedModel:
                 # find 5 most similar atoms
                 atom_vector = embeddings[atom]
 
-                elem_atom = Element(td.index_to_atom[atom])
+                elem_atom = Element(re.sub(r'[0-9]|\+|-', '', td.index_to_atom[atom]))
                 repr_atom = np.array([elem_atom.group, elem_atom.row, elem_atom.X])
 
                 similarities = []
                 for i in range(len(embeddings)):
                     if i == atom: continue
 
-                    elem_other = Element(td.index_to_atom[i])
+                    if td.index_to_atom[i] in ['Fe2+', 'Fe3+']:
+                        continue
+
+                    if td.index_to_atom[i] == 'Fe' and td.index_to_atom[atom] in ['Fe2+', 'Fe3+']:
+                        continue
+
+                    elem_other = Element(re.sub(r'[0-9]|\+|-', '', td.index_to_atom[i]))
                     repr_other = np.array([elem_other.group, elem_other.row, elem_other.X])
                     sim = np.linalg.norm(repr_atom - repr_other)
 
