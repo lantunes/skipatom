@@ -5,7 +5,7 @@ from skipatom import TrainingData, Trainer
 import argparse
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data', '-d', type=str,
                         help='The path to the training data file.')
@@ -25,8 +25,12 @@ if __name__ == '__main__':
 
     target_atoms, context_atoms = td.to_one_hot()
 
-    tr = Trainer(dim_in=args.dim, dim_out=len(context_atoms[0]))
+    tr = Trainer(embedding_dim=args.dim, word_dim=len(context_atoms[0]))
 
     embeddings = tr.train(target_atoms, context_atoms, step_size=args.step, num_epochs=args.epochs, batch_size=args.batch)
 
     Trainer.save_embeddings(embeddings, args.out)
+
+
+if __name__ == '__main__':
+    main()

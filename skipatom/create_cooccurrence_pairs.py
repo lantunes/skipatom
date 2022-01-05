@@ -4,7 +4,6 @@ sys.path.append('../skipatom')
 import argparse
 import warnings
 import numpy as np
-import pandas as pd
 from tqdm import tqdm
 import multiprocessing as mp
 import gzip
@@ -41,7 +40,7 @@ def worker(structs, queue, verbose):
                 logging.warning(e)
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data', type=str, help='The path to the dataset pickle file.')
     parser.add_argument('--out', '-o', type=str,
@@ -60,6 +59,8 @@ if __name__ == '__main__':
                         help='If present, the last N records of the dataset will be used only. '
                              'If negative, then the first N records will be skipped and the remainder will be used only.')
     args = parser.parse_args()
+
+    import pandas as pd
 
     print("reading pickle file...")
     df = pd.read_pickle(args.data)
@@ -92,3 +93,7 @@ if __name__ == '__main__':
     queue.put("kill")
     pool.close()
     pool.join()
+
+
+if __name__ == '__main__':
+    main()
