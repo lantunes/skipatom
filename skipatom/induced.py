@@ -1,8 +1,8 @@
 from .training_data import TrainingData
 from .trainer import Trainer
 from .model import SkipAtomModel
+from .util import get_atoms
 import numpy as np
-from pymatgen import Element
 
 
 class SkipAtomInducedModel:
@@ -14,6 +14,7 @@ class SkipAtomInducedModel:
     def load(model_file, training_data_file, min_count, top_n):
         td = TrainingData.load(training_data_file)
         embeddings = Trainer.load_embeddings(model_file)
+        elem_atoms = get_atoms()
 
         atoms_to_update_count = {}
         for pair in td.data:
@@ -28,14 +29,14 @@ class SkipAtomInducedModel:
                 # find 5 most similar atoms
                 atom_vector = embeddings[atom]
 
-                elem_atom = Element(td.index_to_atom[atom])
+                elem_atom = elem_atoms[td.index_to_atom[atom]]
                 repr_atom = np.array([elem_atom.group, elem_atom.row, elem_atom.X])
 
                 similarities = []
                 for i in range(len(embeddings)):
                     if i == atom: continue
 
-                    elem_other = Element(td.index_to_atom[i])
+                    elem_other = elem_atoms[td.index_to_atom[i]]
                     repr_other = np.array([elem_other.group, elem_other.row, elem_other.X])
                     sim = np.linalg.norm(repr_atom - repr_other)
 

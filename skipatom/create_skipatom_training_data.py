@@ -5,7 +5,7 @@ from skipatom import TrainingData
 import argparse
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--data', '-d', type=str,
                         help='The path to the pairs .csv file.')
@@ -19,3 +19,7 @@ if __name__ == '__main__':
     print("number of examples: %s" % len(training_data.data))
 
     TrainingData.save(training_data, args.out)
+
+
+if __name__ == '__main__':
+    main()
