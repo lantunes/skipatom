@@ -11,7 +11,7 @@ SkipAtom can be installed with:
 pip install skipatom
 ```
 However, this will install a minimal implementation that can be used to work with existing SkipAtom embeddings only. To 
-train new SkipAtom embeddings, SkipAtom should be installed with:
+train new embeddings, SkipAtom should be installed with:
 ```
 pip install skipatom[training]
 ```
@@ -31,8 +31,8 @@ These pairs will be used in the training of the SkipAtom vectors. Pairs that wer
 Materials Project dataset are available in the file `data/mp_2020_10_09.pairs.csv.gz`.
 
 _(NOTE: For the following steps 1 to 3, the programs `create_cooccurrence_pairs`, `create_skipatom_training_data` and 
-`create_skipatom_embeddings` will be on the command line path if SkipAtom was installed with 
-`pip install skipatom[training]`.)_
+`create_skipatom_embeddings` are installed as console scripts when using `pip install skipatom`, and will be usable if 
+SkipAtom was installed with `pip install skipatom[training]`.)_
 
 1. Create the co-occurrence pairs:
 ```
@@ -41,6 +41,8 @@ $ create_cooccurrence_pairs \
 --out data/mp_2020_10_09.pairs.csv.gz.2 \
 --processes 70 --workers 200 -z
 ```
+<sup>NOTE: Creating the pairs is the most computationally demanding step, and is accelerated by the availability 
+of multiple cores.</sup>
 
 2. Prepare the data for training:
 ```
@@ -94,7 +96,8 @@ print(pooled)
 The `skipatom` module contains Keras-based implementations of an ElemNet-type neural network (for both 
 regression and classification), and the Elpasolite neural network described by Zhou et al, in 2018. To use these, it is
 necessary to have `tensorflow` in the environment. (Have a look at either the `requirements.txt` file or the 
-`environment.yml` file for a full list of dependencies.) 
+`environment.yml` file for a full list of dependencies.) The neural networks are implemented in the `ElemNet`, 
+`ElemNetClassifier`, and `ElpasoliteNet` classes.
 
 For more information regarding these models, see:
 
