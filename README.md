@@ -38,7 +38,7 @@ SkipAtom was installed with `pip install skipatom[training]`.)_
 ```
 $ create_cooccurrence_pairs \
 --data data/mp_2020_10_09.pkl.gz \
---out data/mp_2020_10_09.pairs.csv.gz.2 \
+--out data/mp_2020_10_09.pairs.csv.gz \
 --processes 70 --workers 200 -z
 ```
 <sup>NOTE: Creating the pairs is the most computationally demanding step, and is accelerated by the availability 
