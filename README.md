@@ -71,9 +71,9 @@ model = SkipAtomInducedModel.load(
 # atom vector for Si
 print(model.vectors[model.dictionary["Si"]])
 ```
-<sup>NOTE: The `model.vectors` will be a NumPy `ndarray`, with dimensions _`N` x `M`_, where _`N`_ is the number of atom
+The `model.vectors` will be a NumPy `ndarray`, with dimensions _`N` x `M`_, where _`N`_ is the number of atom
 types, and _`M`_ is the number of embedding dimensions (e.g. 200). The `model.dictionary` maps an atom's symbol to 
-its index in the `model.vectors` array.</sup>
+its index in the `model.vectors` array.
 
 ### Pooling Operations
 
