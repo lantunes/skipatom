@@ -75,6 +75,11 @@ The `model.vectors` will be a NumPy `ndarray`, with dimensions _`N` x `M`_, wher
 types, and _`M`_ is the number of embedding dimensions (e.g. 200). The `model.dictionary` maps an atom's symbol to 
 its index in the `model.vectors` array.
 
+There are two kinds of SkipAtom models available: `SkipAtomModel` and `SkipAtomInducedModel`. The `SkipAtomModel` class
+does not perform the induction step when the embeddings are loaded. The `SkipAtomInducedModel` must be used to obtain
+the induced embeddings. The induction step can be tuned using the `min_count` and `top_n` parameters when loading the 
+embeddings. 
+
 ### Pooling Operations
 
 The `skipatom` module also contains several utility functions for pooling atom vectors into distributed representations 
