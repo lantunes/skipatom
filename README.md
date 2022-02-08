@@ -129,6 +129,40 @@ print(model.vectors[model.dictionary["Se"]])
 # [0. 0. 1.]
 ```
 
+### Random Vectors
+
+For convenience, a class for assigning random vectors to atoms is included in the `skipatom` module. The following 
+example demonstrates how to use the class:
+```python
+from skipatom import RandomVectors
+
+model = RandomVectors(elems=["Te", "Bi", "Se"], dim=5, mean=0.0, std=1.0)
+
+# random atom vector for Se
+print(model.vectors[model.dictionary["Se"]])
+# [ 1.00470084  0.64535562 -1.1116041   1.12440526 -1.66262765]
+```
+
+### Generic Atom Vectors
+
+A class for loading pre-trained/existing atom vectors is included in the `skipatom` module. The following example 
+demonstrates loading Mat2Vec vectors from a file (included in this repository):
+```python
+from skipatom import AtomVectors
+
+model = AtomVectors.load("data/mat2vec.dim200.model")
+
+# Mat2Vec atom vector for Se
+print(model.vectors[model.dictionary["Se"]])
+# [0.5476523637771606, 0.28294137120246887, -0.1327364146709442, ...
+```
+Files containing pre-trained Atom2Vec vectors are also included in the `data` folder in this repository, and can be 
+used in the same way.
+
+### Reproducing the experiments in the paper
+
+TODO
+
 - - - - - - - - -
 
 This repository includes data from the [Materials Project](https://materialsproject.org/). 
