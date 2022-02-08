@@ -49,8 +49,6 @@ if __name__ == '__main__':
                         help="path to dataset file")
     parser.add_argument("--architecture", required=True, choices=ARCHITECTURES,
                         help="type of architecture to use")
-    parser.add_argument("--dim", required=True, type=int,
-                        help="the size of the input representation")
     parser.add_argument("--results", nargs="?", required=True, type=str,
                         help="path to the directory where the results .csv file will be written "
                              "(this directory must already exist)")
@@ -100,7 +98,6 @@ if __name__ == '__main__':
 
     print("dataset: %s" % args.dataset)
     print("architecture: %s" % architecture)
-    print("dim: %s" % args.dim)
     print("results: %s" % args.results)
     print("repeats: %s" % args.repeats)
     print("folds: %s" % args.folds)
@@ -119,6 +116,9 @@ if __name__ == '__main__':
 
     X = np.asarray(X, dtype=np.float64)
     y = np.asarray(y, dtype=np.float64)
+
+    dim = X[0].shape[0]
+    print("dim: %s" % dim)
 
     kfold = RepeatedKFold(n_splits=args.folds, n_repeats=args.repeats, random_state=args.seed)
 
@@ -144,7 +144,7 @@ if __name__ == '__main__':
         if args.early_stopping:
             callbacks.append(EarlyStopping(monitor="val_mae", mode="min", patience=args.patience))
 
-        model = architecture(input_dim=args.dim, activation=args.activation, l2_lambda=args.l2)
+        model = architecture(input_dim=dim, activation=args.activation, l2_lambda=args.l2)
 
         model.train(X[train], y[train], X[test], y[test],
                     num_epochs=args.epochs, batch_size=args.batch, step_size=args.lr, callbacks=callbacks)
