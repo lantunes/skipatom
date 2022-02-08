@@ -159,7 +159,7 @@ print(model.vectors[model.dictionary["Se"]])
 Files containing pre-trained Atom2Vec vectors are also included in the `data` folder in this repository, and can be 
 used in the same way.
 
-### Reproducing the experiments in the paper
+### Performing the experiments in the paper
 
 TODO
 
