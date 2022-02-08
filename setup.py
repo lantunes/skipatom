@@ -11,7 +11,7 @@ with open(INIT_FILE) as fid:
     else:
         raise RuntimeError("Unable to find version string in %s" % INIT_FILE)
 
-packages = find_packages(exclude=("tests", "demos", "data", "resources",))
+packages = find_packages(exclude=("tests", "demos", "data", "resources", "bin", "out",))
 
 setup(name="skipatom",
       version=version,
@@ -33,9 +33,9 @@ setup(name="skipatom",
       packages=packages,
       keywords=["machine learning", "materials science", "materials informatics", "distributed representations", "chemistry"],
       python_requires='>=3.6',
-      install_requires=["numpy >= 1.18.5", "tqdm >= 4.61.1"],
+      install_requires=["numpy >= 1.18.5"],
       extras_require={
-            "training": ["pymatgen >= 2021.2.8.1", "pandas >= 1.1.5", "tensorflow == 2.3.2"]
+            "training": ["pymatgen >= 2021.2.8.1", "pandas >= 1.1.5", "tensorflow == 2.3.2", "tqdm >= 4.61.1"]
       },
       entry_points={
           'console_scripts': [
