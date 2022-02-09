@@ -161,9 +161,9 @@ used in the same way.
 
 ### Performing the Experiments in the Paper
 
-To perform the experiments in the SkipAtom paper, follow the steps outlined in this section. Note that you must have 
-a Python environment with tensorflow 2.3 and scikit-learn 0.24, in addition to the skipatom library and its 
-dependencies. 
+To perform the experiments in the [SkipAtom paper](https://arxiv.org/abs/2107.14664), follow the steps outlined in this 
+section. Note that you must have a Python environment with tensorflow 2.3 and scikit-learn 0.24, in addition to the 
+skipatom library and its dependencies. 
 
 #### Performing experiments with the MatBench datasets
 
