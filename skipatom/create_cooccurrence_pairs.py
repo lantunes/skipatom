@@ -4,7 +4,6 @@ sys.path.append('../skipatom')
 import argparse
 import warnings
 import numpy as np
-from tqdm import tqdm
 import multiprocessing as mp
 import gzip
 import logging
@@ -15,6 +14,7 @@ warnings.simplefilter("ignore", category=UserWarning)
 
 
 def listener(queue, filename, zip, n):
+    from tqdm import tqdm
     pbar = tqdm(total=n)
     o = gzip.open(filename, "wt") if zip else open(filename, "w")
     with o as f:
