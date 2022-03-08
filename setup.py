@@ -19,7 +19,7 @@ setup(name="skipatom",
       long_description="SkipAtom is an approach for creating distributed representations of atoms, for use in Machine "
                        "Learning contexts. It is based on the Skip-gram model used widely in "
                        "Natural Language Processing.",
-      license="GNU General Public License v3",
+      license="MIT",
       classifiers=[
             'Development Status :: 5 - Production/Stable',
             'Intended Audience :: Developers',
