@@ -2,14 +2,13 @@ import sys
 sys.path.extend([".", ".."])
 from sys import argv
 import argparse
-import csv
 from pymatgen import Element
 
 from skipatom import SkipAtomModel, SkipAtomInducedModel
 
 """
 e.g. 
---model ../data/mp_2020_10_09.dim200.model 
+--model ../data/mp_2020_10_09.dim200.keras.model 
 --data ../data/mp_2020_10_09.training.data 
 --induced --min-count 2e7 --top-n 5
 --out ../data/skipatom_20201009_induced.csv
@@ -43,12 +42,11 @@ if __name__ == '__main__':
     dim = len(model.vectors[0])
 
     with open(args.out, "wt") as f:
-        writer = csv.writer(f)
         header = ["element"]
         header.extend([str(i) for i in range(dim)])
-        writer.writerow(header)
+        f.write("%s\n" % ",".join(header))
         for elem, _ in sorted_elems:
-            vec = model.vectors[model.dictionary[elem]]
+            vec = model.vectors[model.dictionary[elem]].tolist()
             row = [elem]
             row.extend([str(v) for v in vec])
-            writer.writerow(row)
+            f.write("%s\n" % ",".join(row))
