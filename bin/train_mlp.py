@@ -1,15 +1,23 @@
 import sys
+
 sys.path.extend([".", ".."])
+import argparse
+import gzip
 import os
 import shutil
-import argparse
 from sys import argv
-import gzip
-from skipatom import ElemNet, ElpasoliteNet
+from time import time
+
 import numpy as np
 from sklearn.model_selection import RepeatedKFold
-from tensorflow.keras.callbacks import Callback, CSVLogger, ModelCheckpoint, EarlyStopping
-from time import time
+from tensorflow.keras.callbacks import (
+    Callback,
+    CSVLogger,
+    EarlyStopping,
+    ModelCheckpoint,
+)
+
+from skipatom import ElemNet, ElpasoliteNet
 
 try:
     import cPickle as pickle
@@ -35,48 +43,99 @@ class LogMetrics(Callback):
 
 def load_all_data(filename, gzipped=True):
     o = gzip.open if gzipped else open
-    with o(filename, 'rb') as f:
+    with o(filename, "rb") as f:
         _, data = pickle.load(f)
         dataset = np.array(data)
         return dataset[:, 0].tolist(), dataset[:, 1].tolist()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Train and evaluate a feedforward neural network model using repeated k-fold cross-validation."
     )
-    parser.add_argument("--dataset", nargs="?", required=True, type=str,
-                        help="path to dataset file")
-    parser.add_argument("--architecture", required=True, choices=ARCHITECTURES,
-                        help="type of architecture to use")
-    parser.add_argument("--results", nargs="?", required=True, type=str,
-                        help="path to the directory where the results .csv file will be written "
-                             "(this directory must already exist)")
-    parser.add_argument("--models", nargs="?", required=True, type=str,
-                        help="path to the directory where models will be persisted (this directory must already exist)")
+    parser.add_argument(
+        "--dataset", nargs="?", required=True, type=str, help="path to dataset file"
+    )
+    parser.add_argument(
+        "--architecture",
+        required=True,
+        choices=ARCHITECTURES,
+        help="type of architecture to use",
+    )
+    parser.add_argument(
+        "--results",
+        nargs="?",
+        required=True,
+        type=str,
+        help="path to the directory where the results .csv file will be written "
+        "(this directory must already exist)",
+    )
+    parser.add_argument(
+        "--models",
+        nargs="?",
+        required=True,
+        type=str,
+        help="path to the directory where models will be persisted (this directory must already exist)",
+    )
 
-    parser.add_argument("--folds", required=False, type=int, default=5,
-                        help="the number of folds to use")
-    parser.add_argument("--repeats", required=False, type=int, default=2,
-                        help="the number of repeats")
-    parser.add_argument("--seed", required=False, type=int, default=17022021,
-                        help="the random state to use for creating the k-fold splits")
-    parser.add_argument("--epochs", required=False, type=int, default=100,
-                        help="the maximum number of epochs")
-    parser.add_argument("--batch", required=False, type=int, default=32,
-                        help="the batch size")
-    parser.add_argument("--lr", required=False, type=float, default=0.0001,
-                        help="the learning rate")
-    parser.add_argument("--activation", required=False, type=str, default="relu",
-                        help="the type of activation to use")
-    parser.add_argument("--l2", required=False, type=float, default=0.00001,
-                        help="the L2 lambda value to use")
+    parser.add_argument(
+        "--folds",
+        required=False,
+        type=int,
+        default=5,
+        help="the number of folds to use",
+    )
+    parser.add_argument(
+        "--repeats", required=False, type=int, default=2, help="the number of repeats"
+    )
+    parser.add_argument(
+        "--seed",
+        required=False,
+        type=int,
+        default=17022021,
+        help="the random state to use for creating the k-fold splits",
+    )
+    parser.add_argument(
+        "--epochs",
+        required=False,
+        type=int,
+        default=100,
+        help="the maximum number of epochs",
+    )
+    parser.add_argument(
+        "--batch", required=False, type=int, default=32, help="the batch size"
+    )
+    parser.add_argument(
+        "--lr", required=False, type=float, default=0.0001, help="the learning rate"
+    )
+    parser.add_argument(
+        "--activation",
+        required=False,
+        type=str,
+        default="relu",
+        help="the type of activation to use",
+    )
+    parser.add_argument(
+        "--l2",
+        required=False,
+        type=float,
+        default=0.00001,
+        help="the L2 lambda value to use",
+    )
 
-    parser.add_argument("--early-stopping", dest="early_stopping", action="store_true",
-                        default=False,
-                        help="whether to use early stopping")
-    parser.add_argument("--patience", required=("--early-stopping" in argv), type=int,
-                        help="the patience to use if early stopping was specified")
+    parser.add_argument(
+        "--early-stopping",
+        dest="early_stopping",
+        action="store_true",
+        default=False,
+        help="whether to use early stopping",
+    )
+    parser.add_argument(
+        "--patience",
+        required=("--early-stopping" in argv),
+        type=int,
+        help="the patience to use if early stopping was specified",
+    )
 
     args = parser.parse_args()
 
@@ -120,20 +179,21 @@ if __name__ == '__main__':
     dim = X[0].shape[0]
     print("dim: %s" % dim)
 
-    kfold = RepeatedKFold(n_splits=args.folds, n_repeats=args.repeats, random_state=args.seed)
+    kfold = RepeatedKFold(
+        n_splits=args.folds, n_repeats=args.repeats, random_state=args.seed
+    )
 
     repeat = 1
     fold = 1
     for train, test in kfold.split(X, y):
-
-        print("REPEAT: %s, FOLD %s" % (repeat, fold))
+        print(f"REPEAT: {repeat}, FOLD {fold}")
 
         log_metrics = LogMetrics(current_repeat=repeat, current_fold=fold)
         csv_log_filename = os.path.join(args.results, "%s-results.csv" % experiment)
         csv_logger = CSVLogger(csv_log_filename, separator=",", append=True)
 
         model_checkpoint = ModelCheckpoint(
-            filepath=os.path.join(model_dir, "best_model_repeat_%s_fold_%s" % (repeat, fold)),
+            filepath=os.path.join(model_dir, f"best_model_repeat_{repeat}_fold_{fold}"),
             save_best_only=True,
             monitor="val_mae",
             mode="min",
@@ -142,12 +202,24 @@ if __name__ == '__main__':
 
         callbacks = [log_metrics, csv_logger, model_checkpoint]
         if args.early_stopping:
-            callbacks.append(EarlyStopping(monitor="val_mae", mode="min", patience=args.patience))
+            callbacks.append(
+                EarlyStopping(monitor="val_mae", mode="min", patience=args.patience)
+            )
 
-        model = architecture(input_dim=dim, activation=args.activation, l2_lambda=args.l2)
+        model = architecture(
+            input_dim=dim, activation=args.activation, l2_lambda=args.l2
+        )
 
-        model.train(X[train], y[train], X[test], y[test],
-                    num_epochs=args.epochs, batch_size=args.batch, step_size=args.lr, callbacks=callbacks)
+        model.train(
+            X[train],
+            y[train],
+            X[test],
+            y[test],
+            num_epochs=args.epochs,
+            batch_size=args.batch,
+            step_size=args.lr,
+            callbacks=callbacks,
+        )
 
         if fold == args.folds:
             fold = 1

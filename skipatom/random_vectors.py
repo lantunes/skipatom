@@ -29,13 +29,20 @@ class RandomVectors:
             self.dictionary[elem] = i
 
     def save(self, filename):
-        with open(filename, 'wb') as f:
-            data = (self.elems, self.dim, self.mean, self.std, self.vectors, self.dictionary)
+        with open(filename, "wb") as f:
+            data = (
+                self.elems,
+                self.dim,
+                self.mean,
+                self.std,
+                self.vectors,
+                self.dictionary,
+            )
             pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     @staticmethod
     def load(filename):
-        with open(filename, 'rb') as f:
+        with open(filename, "rb") as f:
             elems, dim, mean, std, vectors, dictionary = pickle.load(f)
             rv = RandomVectors(elems=elems, dim=dim, mean=mean, std=std)
             rv.vectors = vectors

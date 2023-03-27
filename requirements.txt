@@ -1,5 +1,5 @@
-pymatgen==2021.2.8.1
-numpy==1.18.5
-pandas==1.1.5
-tqdm==4.61.1
-tensorflow==2.3.2
+pymatgen
+numpy
+pandas
+tqdm
+tensorflow
