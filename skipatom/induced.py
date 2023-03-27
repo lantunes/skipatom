@@ -1,8 +1,9 @@
-from .training_data import TrainingData
-from .trainer import Trainer
-from .model import SkipAtomModel
-from .util import get_atoms
 import numpy as np
+
+from .model import SkipAtomModel
+from .trainer import Trainer
+from .training_data import TrainingData
+from .util import get_atoms
 
 
 class SkipAtomInducedModel:
@@ -34,10 +35,13 @@ class SkipAtomInducedModel:
 
                 similarities = []
                 for i in range(len(embeddings)):
-                    if i == atom: continue
+                    if i == atom:
+                        continue
 
                     elem_other = elem_atoms[td.index_to_atom[i]]
-                    repr_other = np.array([elem_other.group, elem_other.row, elem_other.X])
+                    repr_other = np.array(
+                        [elem_other.group, elem_other.row, elem_other.X]
+                    )
                     sim = np.linalg.norm(repr_atom - repr_other)
 
                     similarities.append((embeddings[i], sim, td.index_to_atom[i]))
@@ -48,7 +52,9 @@ class SkipAtomInducedModel:
                 # print(td.index_to_atom[atom])
                 # print([i[2] for i in most_sim])
 
-                mean_sim_vector = np.mean([np.e**-i * m[0] for i, m in enumerate(most_sim)], axis=0)
+                mean_sim_vector = np.mean(
+                    [np.e**-i * m[0] for i, m in enumerate(most_sim)], axis=0
+                )
                 atom_vector = np.sum([atom_vector, mean_sim_vector], axis=0)
 
                 embeddings[atom] = atom_vector

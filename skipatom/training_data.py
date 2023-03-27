@@ -3,8 +3,9 @@ try:
 except ImportError:
     import pickle
 
-import numpy as np
 import gzip
+
+import numpy as np
 
 
 class TrainingData:
@@ -17,7 +18,9 @@ class TrainingData:
         data = np.array(self.data)
         atom1_indices = data[:, 0]
         atom2_indices = data[:, 1]
-        return self._one_hot(atom1_indices, len(self.atom_to_index)), self._one_hot(atom2_indices, len(self.atom_to_index))
+        return self._one_hot(atom1_indices, len(self.atom_to_index)), self._one_hot(
+            atom2_indices, len(self.atom_to_index)
+        )
 
     @staticmethod
     def _one_hot(x, k, dtype=np.float32):
@@ -26,9 +29,12 @@ class TrainingData:
 
     @staticmethod
     def from_atom_pairs(atom_pairs_csv):
-
         # create the atom indices
-        o = gzip.open(atom_pairs_csv, 'rt') if atom_pairs_csv.endswith(".gz") else open(atom_pairs_csv, 'rt')
+        o = (
+            gzip.open(atom_pairs_csv, "rt")
+            if atom_pairs_csv.endswith(".gz")
+            else open(atom_pairs_csv)
+        )
         atoms = set()
         atom_to_index = {}
         index_to_atom = {}
@@ -58,10 +64,10 @@ class TrainingData:
 
     @staticmethod
     def save(training_data, filename):
-        with open(filename, 'wb') as f:
+        with open(filename, "wb") as f:
             pickle.dump(training_data, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     @staticmethod
     def load(filename):
-        with open(filename, 'rb') as f:
+        with open(filename, "rb") as f:
             return pickle.load(f)

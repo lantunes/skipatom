@@ -21,13 +21,13 @@ class OneHotVectors:
             self.vectors[i][i] = 1.0
 
     def save(self, filename):
-        with open(filename, 'wb') as f:
+        with open(filename, "wb") as f:
             data = (self.elems, self.vectors, self.dictionary)
             pickle.dump(data, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     @staticmethod
     def load(filename):
-        with open(filename, 'rb') as f:
+        with open(filename, "rb") as f:
             elems, vectors, dictionary = pickle.load(f)
             ohv = OneHotVectors(elems=elems)
             ohv.vectors = vectors

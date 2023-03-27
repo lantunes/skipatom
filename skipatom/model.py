@@ -1,5 +1,5 @@
-from .training_data import TrainingData
 from .trainer import Trainer
+from .training_data import TrainingData
 
 
 class SkipAtomModel:

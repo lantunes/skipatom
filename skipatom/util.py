@@ -202,7 +202,7 @@ ATOMS = {
     "Mc": [15, 7, np.nan],
     "Lv": [16, 7, np.nan],
     "Ts": [17, 7, np.nan],
-    "Og": [18, 7, np.nan]
+    "Og": [18, 7, np.nan],
 }
 
 
@@ -211,6 +211,7 @@ class Atom:
     Creates a representation of an atom, consisting of the atomic symbol, the atomic group number, the atomic
     row number, and the atom's Pauling electronegativity.
     """
+
     def __init__(self, symbol, group, row, X):
         """
         Create an instance of `Atom`.
@@ -233,4 +234,6 @@ def get_atoms():
     :return: a dict, where the keys are atomic symbols, and the associated values are
              the corresponding `Atom` instances
     """
-    return {atom: Atom(atom, props[0], props[1], props[2]) for atom, props in ATOMS.items()}
+    return {
+        atom: Atom(atom, props[0], props[1], props[2]) for atom, props in ATOMS.items()
+    }
