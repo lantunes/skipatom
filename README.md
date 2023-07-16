@@ -101,11 +101,11 @@ print(pooled)
 
 ### Neural Network Models
 
-The `skipatom` module contains Keras-based implementations of an ElemNet-type neural network (for both 
+The `skipatom` module contains Keras-based implementations of an ElemNet-like neural network (for both 
 regression and classification), and the Elpasolite neural network described by Zhou et al, in 2018. To use these, it is
 necessary to have `tensorflow` in the environment. (Have a look at either the `requirements.txt` file or the 
-`environment.yml` file for a full list of dependencies.) The neural networks are implemented in the `ElemNet`, 
-`ElemNetClassifier`, and `ElpasoliteNet` classes.
+`environment.yml` file for a full list of dependencies.) The neural networks are implemented in the `ElemNetLike`, 
+`ElemNetLikeClassifier`, and `ElpasoliteNet` classes.
 
 For more information regarding these models, see:
 

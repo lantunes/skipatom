@@ -8,6 +8,6 @@ from .induced import SkipAtomInducedModel
 from .one_hot import OneHotVectors
 from .random_vectors import RandomVectors
 from .atom_vectors import AtomVectors
-from .elemnet_network import ElemNet
-from .elemnet_network_classfn import ElemNetClassifier
+from .elemnet_like_network import ElemNetLike
+from .elemnet_like_classifier_network import ElemNetLikeClassifier
 from .elpasolite_network import ElpasoliteNet

@@ -1,5 +1,5 @@
 
-class ElemNetClassifier:
+class ElemNetLikeClassifier:
     def __init__(self, input_dim, activation="relu", l2_lambda=0.00001):
         """
         A binary classifier based on the ElemNet architecture, as in:
@@ -12,21 +12,10 @@ class ElemNetClassifier:
 
         self._model = Sequential()
         self._model.add(Dense(1024, activation=activation, input_dim=input_dim, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(1024, activation=activation, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(1024, activation=activation, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(1024, activation=activation, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(512, activation=activation, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(512, activation=activation, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(512, activation=activation, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(256, activation=activation, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(256, activation=activation, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(256, activation=activation, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(128, activation=activation, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(128, activation=activation, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(128, activation=activation, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(64, activation=activation, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(64, activation=activation, kernel_regularizer=l2(l2_lambda)))
-        self._model.add(Dense(32, activation=activation, kernel_regularizer=l2(l2_lambda)))
+        layers = [(3, 1024), (3, 512), (3, 256), (3, 128), (2, 64), (1, 32)]
+        for n, units in layers:
+            for _ in range(n):
+                self._model.add(Dense(units, activation=activation, kernel_regularizer=l2(l2_lambda)))
         self._model.add(Dense(1, activation='sigmoid', kernel_regularizer=l2(l2_lambda)))
 
     def train(self, train_x, train_y, test_x, test_y, batch_size=32, step_size=0.0001, num_epochs=10, callbacks=None):

@@ -5,7 +5,7 @@ import shutil
 import argparse
 from sys import argv
 import gzip
-from skipatom import ElemNet, ElpasoliteNet
+from skipatom import ElemNetLike, ElpasoliteNet
 import numpy as np
 from sklearn.model_selection import RepeatedKFold
 from keras.callbacks import Callback, CSVLogger, ModelCheckpoint, EarlyStopping
@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
     architecture = None
     if args.architecture == ELEMNET_ARCH:
-        architecture = ElemNet
+        architecture = ElemNetLike
     elif args.architecture == ELPASOLITE_ARCH:
         architecture = ElpasoliteNet
     else:

@@ -5,7 +5,7 @@ import shutil
 import argparse
 from sys import argv
 import gzip
-from skipatom import ElemNet, ElemNetClassifier
+from skipatom import ElemNetLike, ElemNetLikeClassifier
 import numpy as np
 from sklearn.model_selection import KFold, StratifiedKFold, train_test_split
 from keras.callbacks import Callback, CSVLogger, ModelCheckpoint, EarlyStopping
@@ -81,9 +81,9 @@ if __name__ == '__main__':
 
     architecture = None
     if args.classification:
-        architecture = ElemNetClassifier
+        architecture = ElemNetLikeClassifier
     else:
-        architecture = ElemNet
+        architecture = ElemNetLike
 
     experiment = "experiment_%s" % int(time())
     model_dir = os.path.join(args.models, experiment)

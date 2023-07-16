@@ -4,7 +4,7 @@ import os
 import shutil
 import argparse
 from sys import argv
-from skipatom import ElemNet, ElemNetClassifier
+from skipatom import ElemNetLike, ElemNetLikeClassifier
 from pymatgen.core import Composition
 import numpy as np
 import pandas as pd
@@ -127,9 +127,9 @@ if __name__ == '__main__':
     is_classification = task.metadata["task_type"] == "classification"
     architecture = None
     if is_classification:
-        architecture = ElemNetClassifier
+        architecture = ElemNetLikeClassifier
     else:
-        architecture = ElemNet
+        architecture = ElemNetLike
 
     pool = None
     if args.pooling == SUM_POOLING:
@@ -153,6 +153,8 @@ if __name__ == '__main__':
     logger.info(f"activation: {args.activation}")
     logger.info(f"l2: {args.l2}")
     logger.info(f"early_stopping: {args.early_stopping}")
+    if args.early_stopping:
+        logger.info(f"patience: {args.patience}")
 
     for fold in task.folds:
         logger.info(f"FOLD {fold+1}")
@@ -189,8 +191,10 @@ if __name__ == '__main__':
                 patience=args.patience
             ))
 
+        logger.info("initializing new model instance...")
         model = architecture(input_dim=X_train[0].shape[0], activation=args.activation, l2_lambda=args.l2)
 
+        logger.info("training model...")
         model.train(X_train, y_train, X_val, y_val,
                     num_epochs=args.epochs, batch_size=args.batch, step_size=args.lr, callbacks=callbacks)
 
@@ -198,18 +202,28 @@ if __name__ == '__main__':
         best_model = model.load(model_checkpoint_path)
 
         logger.info("evaluating on test set...")
-        # Get testing data
         test_inputs = task.get_test_data(fold, include_target=False)
         X_test = featurize(test_inputs, input_type, atom_dictionary, atom_embeddings, pool)
 
-        # Predict on the testing data;
-        #  output should be a pandas series, numpy array, or python iterable
-        #  where the array elements are floats or bools
         predictions = best_model.predict(X_test)
         predictions = predictions.flatten()
         if is_classification:
             predictions = predictions >= 0.5
-        task.record(fold, predictions)
+        params = {
+            "vectors": args.vectors,
+            "pooling": args.pooling,
+            "architecture": architecture.__name__,
+            "activation": args.activation,
+            "l2": args.l2,
+            "val_size": args.val_size,
+            "seed": args.seed,
+            "max_epochs": args.epochs,
+            "batch_size": args.batch,
+            "learning_rate": args.lr,
+            "early_stopping": args.early_stopping,
+            "patience": args.patience if args.early_stopping else None,
+        }
+        task.record(fold, predictions, params=params)
 
     # Save results
     # TODO according to docs, `to_file` should apparently save to a .json.gz file,
