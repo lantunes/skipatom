@@ -6,9 +6,9 @@ class ElemNetClassifier:
         Jha, Dipendra, et al. "Elemnet: Deep learning the chemistry of materials from only elemental composition."
         Scientific reports 8.1 (2018): 1-13.
         """
-        from tensorflow.keras.layers import Dense
-        from tensorflow.keras.models import Sequential
-        from tensorflow.keras.regularizers import l2
+        from keras.layers import Dense
+        from keras.models import Sequential
+        from keras.regularizers import l2
 
         self._model = Sequential()
         self._model.add(Dense(1024, activation=activation, input_dim=input_dim, kernel_regularizer=l2(l2_lambda)))
@@ -30,8 +30,8 @@ class ElemNetClassifier:
         self._model.add(Dense(1, activation='sigmoid', kernel_regularizer=l2(l2_lambda)))
 
     def train(self, train_x, train_y, test_x, test_y, batch_size=32, step_size=0.0001, num_epochs=10, callbacks=None):
-        from tensorflow.keras.optimizers import Adam
-        from tensorflow.keras.metrics import AUC
+        from keras.optimizers import Adam
+        from keras.metrics import AUC
 
         self._model.compile(loss="binary_crossentropy", optimizer=Adam(lr=step_size, epsilon=1e-8), metrics=[AUC()])
 

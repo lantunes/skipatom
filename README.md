@@ -162,8 +162,14 @@ used in the same way.
 ### Performing the Experiments in the Paper
 
 To perform the experiments in the [SkipAtom paper](https://arxiv.org/abs/2107.14664), follow the steps outlined in this 
-section. Note that you must have a Python environment with tensorflow 2.3 and scikit-learn 0.24, in addition to the 
+section. Note that you must have a Python environment with tensorflow, scikit-learn, and matbench, in addition to the 
 skipatom library and its dependencies. 
+
+The best approach might be to clone this repo, create a new virtual python environment (version >= 3.8), and install 
+the dependencies. From the root of the cloned project:
+```
+$ pip install .[training]
+```
 
 #### Performing experiments with the MatBench datasets
 

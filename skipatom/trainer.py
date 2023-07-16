@@ -6,15 +6,15 @@ except ImportError:
 
 class Trainer:
     def __init__(self, embedding_dim, word_dim):
-        from tensorflow.keras.layers import Dense
-        from tensorflow.keras.models import Sequential
+        from keras.layers import Dense
+        from keras.models import Sequential
 
         self._model = Sequential()
         self._model.add(Dense(embedding_dim, input_dim=word_dim, name="embeddings"))
         self._model.add(Dense(word_dim, activation="softmax"))
 
     def train(self, words, tags, step_size=0.001, num_epochs=10, batch_size=128, **kwargs):
-        from tensorflow.keras.optimizers import Adam
+        from keras.optimizers import Adam
 
         self._model.compile(loss="categorical_crossentropy",
                             optimizer=Adam(lr=step_size, epsilon=1e-8, **kwargs))

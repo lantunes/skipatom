@@ -25,8 +25,6 @@ class SkipAtomInducedModel:
 
         for atom, count in atoms_to_update_count.items():
             if count < min_count:
-                # update the embedding
-                # find 5 most similar atoms
                 atom_vector = embeddings[atom]
 
                 elem_atom = elem_atoms[td.index_to_atom[atom]]
@@ -44,9 +42,6 @@ class SkipAtomInducedModel:
 
                 # keep the top N most similar
                 most_sim = list(sorted(similarities, key=lambda item: item[1]))[:top_n]
-
-                # print(td.index_to_atom[atom])
-                # print([i[2] for i in most_sim])
 
                 mean_sim_vector = np.mean([np.e**-i * m[0] for i, m in enumerate(most_sim)], axis=0)
                 atom_vector = np.sum([atom_vector, mean_sim_vector], axis=0)

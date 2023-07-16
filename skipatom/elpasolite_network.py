@@ -5,16 +5,16 @@ class ElpasoliteNet:
         As described in: Zhou, Quan, et al. "Learning atoms for materials discovery."
         Proceedings of the National Academy of Sciences 115.28 (2018): E6411-E6417.
         """
-        from tensorflow.keras.layers import Dense
-        from tensorflow.keras.models import Sequential
-        from tensorflow.keras.regularizers import l2
+        from keras.layers import Dense
+        from keras.models import Sequential
+        from keras.regularizers import l2
 
         self._model = Sequential()
         self._model.add(Dense(10, activation=activation, input_dim=input_dim, kernel_regularizer=l2(l2_lambda)))
         self._model.add(Dense(1, kernel_regularizer=l2(l2_lambda)))
 
     def train(self, train_x, train_y, test_x, test_y, batch_size=32, step_size=0.0001, num_epochs=10, callbacks=None):
-        from tensorflow.keras.optimizers import Adam
+        from keras.optimizers import Adam
 
         self._model.compile(loss="mean_absolute_error", optimizer=Adam(lr=step_size, epsilon=1e-8), metrics=["mae"])
 

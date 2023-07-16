@@ -6,7 +6,7 @@ import gzip
 import json
 from skipatom import OneHotVectors, RandomVectors, AtomVectors, SkipAtomModel, SkipAtomInducedModel, \
     sum_pool, mean_pool, max_pool
-from pymatgen import Composition, Structure
+from pymatgen.core import Composition, Structure
 
 try:
     import cPickle as pickle
@@ -149,6 +149,7 @@ if __name__ == "__main__":
             val = 1. if val else 0.
 
         if any([e.name not in atoms for e in composition.elements]):
+            print("WARNING: skipping %s, as it contains unsupported atoms" % formula)
             continue
 
         if (args.representation == SKIPATOM or args.representation == SKIPATOM_INDUCED) \

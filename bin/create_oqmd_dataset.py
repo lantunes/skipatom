@@ -5,7 +5,7 @@ import argparse
 import csv
 from skipatom import OneHotVectors, RandomVectors, AtomVectors, SkipAtomModel, SkipAtomInducedModel, \
     sum_pool, mean_pool, max_pool
-from pymatgen import Composition
+from pymatgen.core import Composition
 
 try:
     import cPickle as pickle
