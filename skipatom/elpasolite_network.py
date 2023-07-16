@@ -16,7 +16,11 @@ class ElpasoliteNet:
     def train(self, train_x, train_y, test_x, test_y, batch_size=32, step_size=0.0001, num_epochs=10, callbacks=None):
         from keras.optimizers import Adam
 
-        self._model.compile(loss="mean_absolute_error", optimizer=Adam(lr=step_size, epsilon=1e-8), metrics=["mae"])
+        self._model.compile(
+            loss="mean_absolute_error",
+            optimizer=Adam(learning_rate=step_size, epsilon=1e-8),
+            metrics=["mae"],
+        )
 
         validation_data = (test_x, test_y)
         if test_x is None and test_y is None:

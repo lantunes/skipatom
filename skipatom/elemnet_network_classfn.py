@@ -33,7 +33,11 @@ class ElemNetClassifier:
         from keras.optimizers import Adam
         from keras.metrics import AUC
 
-        self._model.compile(loss="binary_crossentropy", optimizer=Adam(lr=step_size, epsilon=1e-8), metrics=[AUC()])
+        self._model.compile(
+            loss="binary_crossentropy",
+            optimizer=Adam(learning_rate=step_size, epsilon=1e-8),
+            metrics=[AUC(name="auc")],
+        )
 
         validation_data = (test_x, test_y)
         if test_x is None and test_y is None:

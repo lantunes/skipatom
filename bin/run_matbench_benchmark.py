@@ -14,7 +14,7 @@ from keras.callbacks import Callback, CSVLogger, ModelCheckpoint, EarlyStopping
 from matbench.bench import MatbenchBenchmark
 from time import time
 import logging
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 logger = logging.getLogger("skipatom")
 
 POOLINGS = ["sum", "mean", "max"]
@@ -45,26 +45,19 @@ def atom_vectors_from_csv(embedding_csv):
 def get_composition(val, input_type):
     if input_type == "composition":
         return Composition(val)
-    elif input_type == "":
-        pass  # TODO handle structure type
-        # if type(pair[0]) is dict:
-        #     composition = Structure.from_dict(pair[0]).composition
-        #     formula = composition.reduced_formula
-        # else:
-        #     formula = pair[0]
-        #     composition = Composition(formula)
+    elif input_type == "structure":
+        return val.composition
     else:
         raise Exception(f"unrecognized input type: {input_type}")
 
 
 def featurize(X, input_type, atom_dictionary, atom_embeddings, pool):
+    logger.info("featurizing...")
     X_featurized = []
     for val in X.values:
         composition = get_composition(val, input_type)
-
         if any([e.name not in atom_dictionary for e in composition.elements]):
             raise Exception(f"{composition.reduced_formula} contains unsupported atoms")
-
         X_featurized.append(pool(composition, atom_dictionary, atom_embeddings))
     return np.array(X_featurized)
 
@@ -151,9 +144,15 @@ if __name__ == '__main__':
     atom_dictionary, atom_embeddings = atom_vectors_from_csv(args.vectors)
     input_type = task.metadata["input_type"]
 
-    logger.info(f"architecture: {architecture}")
+    logger.info(f"architecture: {architecture.__name__}")
     logger.info(f"val_size: {args.val_size}")
-    # TODO log other params
+    logger.info(f"seed: {args.seed}")
+    logger.info(f"epochs: {args.epochs}")
+    logger.info(f"batch: {args.batch}")
+    logger.info(f"lr: {args.lr}")
+    logger.info(f"activation: {args.activation}")
+    logger.info(f"l2: {args.l2}")
+    logger.info(f"early_stopping: {args.early_stopping}")
 
     for fold in task.folds:
         logger.info(f"FOLD {fold+1}")
@@ -173,8 +172,9 @@ if __name__ == '__main__':
         csv_log_filename = os.path.join(args.results, f"{experiment}-fold-results.csv")
         csv_logger = CSVLogger(csv_log_filename, separator=",", append=True)
 
+        model_checkpoint_path = os.path.join(model_dir, f"best_model_fold_{fold+1}")
         model_checkpoint = ModelCheckpoint(
-            filepath=os.path.join(model_dir, f"best_model_fold_{fold+1}"),
+            filepath=model_checkpoint_path,
             save_best_only=True,
             monitor="val_auc" if is_classification else "val_mae",
             mode="max" if is_classification else "min",
@@ -194,10 +194,8 @@ if __name__ == '__main__':
         model.train(X_train, y_train, X_val, y_val,
                     num_epochs=args.epochs, batch_size=args.batch, step_size=args.lr, callbacks=callbacks)
 
-        checkpoints = [os.path.join(model_dir, name) for name in os.listdir(model_dir)]
-        latest_checkpoint = max(checkpoints, key=os.path.getctime)
-        logger.info(f"restoring from: {latest_checkpoint}")
-        best_model = model.load(latest_checkpoint)
+        logger.info(f"restoring from: {model_checkpoint_path}")
+        best_model = model.load(model_checkpoint_path)
 
         logger.info("evaluating on test set...")
         # Get testing data
@@ -208,7 +206,10 @@ if __name__ == '__main__':
         #  output should be a pandas series, numpy array, or python iterable
         #  where the array elements are floats or bools
         predictions = best_model.predict(X_test)
-        task.record(fold, predictions.flatten())
+        predictions = predictions.flatten()
+        if is_classification:
+            predictions = predictions >= 0.5
+        task.record(fold, predictions)
 
     # Save results
     # TODO according to docs, `to_file` should apparently save to a .json.gz file,
